@@ -86,6 +86,16 @@ prepare_buffer macro buffer, size
     mov [buffer + 01h], 0
 endm ; prepare_buffer
 
+terminate_string macro buffer, length
+    mov bx, length
+    lea si, buffer
+    mov byte ptr si[bx], 0Ah
+    inc bx
+    mov byte ptr si[bx], 0Dh
+    inc bx
+    mov byte ptr si[bx], '$'
+endm ; terminate_string
+
 ; adds endline characters to the end of a buffer
 terminate_buffer macro buffer, length
     mov bx, length
@@ -97,3 +107,8 @@ terminate_buffer macro buffer, length
     inc bx
     mov byte ptr si[bx], '$'
 endm ; terminate_buffer
+
+load_buffer macro register, buffer
+    lea register, buffer
+    add register, 02h
+endm ; load_buffer
