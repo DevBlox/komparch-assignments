@@ -8,10 +8,14 @@ stack_segment segment para stack 'stack'
 stack_segment ends
 
 data_segment segment para public 'data'
-    message db 'Enter two strings', 10, 13, '$'
+    message db 'Enter the first string: ', '$'
+    message2 db 10, 13, 'Enter the second one: ', '$'
+    result_message db 10, 13, 'The encrypted string is: ', '$'
     string_buffer_size equ 100
     string_one db string_buffer_size dup('$')
     string_two db string_buffer_size dup('$')
+    string_one_length dw 0
+    string_two_length dw 0
 data_segment ends
 
 code_segment segment para public 'code'
@@ -20,14 +24,18 @@ code_segment segment para public 'code'
 
     start:
         load_data_segment data_segment
-        print message
 
-        stdin_prepare_buffer string_one, string_buffer_size
+        print message
+        prepare_buffer string_one, string_buffer_size
         stdin_buffer_read string_one
-        mov bx, 02h
-        print string_one + bx
-        print string_one + bx
-        print string_one + bx
+        buflen string_one, string_one_length
+
+        print message2
+        prepare_buffer string_two, string_buffer_size
+        stdin_buffer_read string_two
+        buflen string_two, string_two_length
+
+        
 
         exit 0
 code_segment ends
