@@ -75,6 +75,8 @@ code_segment segment para public 'code'
         je end_encryption
         mov ah, si[bx]
         mov encrypted[bx], ah
+        inc bx
+        jmp stage_two
 
     ; prints out the encrypted string
     end_encryption:
