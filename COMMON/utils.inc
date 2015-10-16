@@ -1,10 +1,3 @@
-; returns the next whitespace separated program parameter
-; in a separate buffer for it
-get_next_parameter proc
-        current_loc dw 0 ; persistent offset counter
-        ret
-get_next_parameter endp
-
 ; counts character count in string, excludes carrage return
 ; Parameters:
 ; si -> buffer effective address
@@ -59,19 +52,6 @@ print_dx macro
         mov ah, 09h
         int 21h
 endm ; print_dx
-
-; exits program with return code
-exit macro exit_code
-        mov ah, 4Ch
-        mov al, exit_code
-        int 21h
-endm ; exit
-
-; loads segment to ds register
-load_data_segment macro segment
-        mov ax, segment
-        mov ds, ax
-endm ; load_data_segment
 
 ; fills a buffer with data
 stdin_buffer_read macro buffer

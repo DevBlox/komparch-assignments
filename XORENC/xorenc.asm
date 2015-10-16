@@ -21,7 +21,8 @@ data_segment ends
 
 code_segment segment para public 'code'
     locals @@
-    include utils.inc
+    include ..\COMMON\utils.inc
+    include ..\COMMON\stdlib.inc
 
     start:
         load_data_segment data_segment

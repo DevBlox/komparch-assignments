@@ -1,2 +1,3 @@
-TASM /zi xorenc.asm
-TLINK /v xorenc.obj
+@ECHO OFF
+TASM xorenc.asm
+TLINK xorenc.obj
