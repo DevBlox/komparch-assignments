@@ -14,10 +14,11 @@ data_segment segment para public 'data'
                db 'Parameters:', 10, 13
                db '-i    ->   input text file', 10, 13
                db '-h    ->   print this help', 10, 13
-               db '-c    ->   console mode (default)', 10, 13, 10, 13, '$'
+               db '-c    ->   console mode (default)', 10, 13, '$'
 
   letter_a_desc db 'Amount of letters a$'
   letter_b_desc db 'Amount of letters b$'
+  endline db 10, 13, '$'
 
   filter struc
     func dw 0
@@ -32,7 +33,7 @@ data_segment segment para public 'data'
   number_filters dw 2
 
   buffer_length equ 256
-  buffer db buffer_length
+  buffer db buffer_length dup('$')
 
 data_segment ends
 
@@ -61,15 +62,18 @@ include ..\COMMON\comarg.inc
 
   start:
     load_data_segment data_segment
-    print help_message
 
-test_loop:
+  test_loop:
     call next_parameter_offset
-    lea dx, es:[81h + bx]
-    print_dx
     cmp bx, -1
-    jne test_loop
+    je exit_prog
+    paramcpy buffer, buffer_length
+    print buffer
+    print endline
+    memset buffer, buffer_length, '$'
+    jmp test_loop
 
+  exit_prog:
     exit 0
 
 code_segment ends
