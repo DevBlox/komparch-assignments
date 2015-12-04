@@ -1,3 +1,3 @@
 @ECHO OFF
-TASM statstxt.asm
+TASM /m2 statstxt.asm
 TLINK statstxt.obj
