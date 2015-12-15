@@ -6,6 +6,9 @@ next_parameter_offset proc
         mov cl, es:[80h]
         mov bx, last_parameter
 
+        cmp cl, 0
+        je @@no_parameters
+
     @@chk_loop:
         cmp bx, cx
         je @@exit_no_res
@@ -20,6 +23,10 @@ next_parameter_offset proc
         inc bx
         mov last_parameter, bx
         ret
+
+    @@no_parameters:
+        mov bx, -3
+        jmp @@exit
 
         last_parameter dw 0 ; persistent offset counter
 next_parameter_offset endp
@@ -64,7 +71,7 @@ param_exec macro buf, buf_size, property_identifier, procedure
         lea si, buf
         mov cx, buf_size
         mov dl, property_identifier
-        mov bx, procedure
+        lea bx, cs:[procedure]
         call param_exec_proc
 endm
 
@@ -78,9 +85,9 @@ param_exec_proc proc
       cmp byte ptr [si], '-'
       jne @@exit
 
-      cmp [si + 1], al
+      cmp [si + 1], dl
       jne @@exit
-      call [bx]
+      call bx
 
     @@exit:
       ret
