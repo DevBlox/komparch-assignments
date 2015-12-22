@@ -5,6 +5,7 @@
 ; Result:
 ; bx -> string length
 string_length_proc proc
+    locals @@
         mov bx, 0 ; bx is used as offset
         mov al, 0Dh ; carrage return
         jmp @@start
@@ -99,3 +100,28 @@ print_char macro char
     mov ah, 02h
     int 21h
 endm
+
+print_number macro number
+    mov ax, number
+    call print_number_proc
+endm
+
+print_number_proc proc
+    locals @@
+    push cx
+    mov cx, 10
+    push ax
+    push dx
+    xor dx, dx          ;edx:eax = number
+    div cx              ;eax = quotient, edx = remainder
+    test ax,ax         ;Is quotient zero?
+    je @@l1               ; yes, don't display it
+    call print_number_proc     ;Display the quotient
+@@l1:
+    add dx, '0'
+    print_char dl  ;Display the remainder
+    pop dx
+    pop ax
+    pop cx
+    ret
+print_number_proc endp
