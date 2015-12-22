@@ -24,6 +24,27 @@ memset_proc proc
         mov si[bx], al
         inc bx
         loop @@set_loop
-        
+
         ret
 memset_proc endp
+
+fopen macro open_mode, filename
+    mov al, open_mode
+    mov ah, 3Dh
+    lea dx, filename
+    int 21h
+endm
+
+fclose macro handle
+    mov ah, 3Eh
+    mov bx, handle
+    int 21h
+endm
+
+fread macro handle, buffer, buffer_size
+    mov ah, 3Fh
+    mov bx, handle
+    mov cx, buffer_size
+    lea dx, buffer
+    int 21h
+endm

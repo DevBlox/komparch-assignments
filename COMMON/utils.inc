@@ -92,3 +92,10 @@ load_buffer macro register, buffer
     lea register, buffer
     add register, 02h
 endm ; load_buffer
+
+; prints character to stdout
+print_char macro char
+    mov dl, char
+    mov ah, 02h
+    int 21h
+endm
