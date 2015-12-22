@@ -125,3 +125,38 @@ print_number_proc proc
     pop cx
     ret
 print_number_proc endp
+
+get_hex proc
+    xor bx, bx
+    mov bl, dl
+    mov dl, hex[bx]
+    ret
+    hex db '0123456789ABCDEF'
+get_hex endp
+
+print_hex macro number
+    mov ax, number
+    call print_hex_proc
+endm
+
+print_hex_proc proc
+    locals @@
+    push cx
+    push bx
+    mov cx, 16
+    push ax
+    push dx
+    xor dx, dx          ;edx:eax = number
+    div cx              ;eax = quotient, edx = remainder
+    test ax,ax         ;Is quotient zero?
+    je @@l1               ; yes, don't display it
+    call print_hex_proc     ;Display the quotient
+@@l1:
+    call get_hex
+    print_char dl  ;Display the remainder
+    pop dx
+    pop ax
+    pop bx
+    pop cx
+    ret
+print_hex_proc endp
